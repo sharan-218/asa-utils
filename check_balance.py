@@ -21,5 +21,8 @@ try:
     print(f"Network: {network}")
     print(f"Address: {address}")
     print(f"💰 Balance is {balance:.5f} ALGO")
+
+    asset_info = client.account_info(address)
+    # print(f"Asset information: {asset_info['assets']}")
 except Exception as e:
     print(f"Error fetching account info: {e}")

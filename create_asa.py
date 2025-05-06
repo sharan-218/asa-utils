@@ -13,7 +13,7 @@ except Exception as e:
     print(f"Error creating Algod client: {e}")
     exit(1)
 
-def create_asa(algo_client, creator_privatekey, creator_address,unit_name,asset_name,total=100000,url=None,note=None) -> None:
+def create_asa(algo_client, creator_privatekey, creator_address,unit_name,asset_name,decimals,total=100000,url=None,note=None) -> None:
     params = algo_client.suggested_params()
     txn = transaction.AssetConfigTxn(
     sender=creator_address,
@@ -22,12 +22,14 @@ def create_asa(algo_client, creator_privatekey, creator_address,unit_name,asset_
         default_frozen=False,
         unit_name=unit_name,
         asset_name=asset_name,
+        decimals=decimals,
         manager=creator_address,
         reserve=creator_address,
         freeze=creator_address,
         clawback=creator_address,
         url=url,
         note=note,
+        
     )
     stxn = txn.sign(creator_privatekey)
     txid = algo_client.send_transaction(stxn)
@@ -36,6 +38,8 @@ def create_asa(algo_client, creator_privatekey, creator_address,unit_name,asset_
     asset_id = algo_client.pending_transaction_info(txid)["asset-index"]
     print(f"Asset ID: {asset_id}")
     print("😃 ASA created successfully!")
+    exploer_url = f"https://testnet.explorer.perawallet.app/asset/{asset_id}/"
+    print(f"✨ Explorer URL: {exploer_url}")
 # create_asa(
 #     algo_client=algod_client,
 #     creator_privatekey=creator_privatekey,
@@ -49,6 +53,7 @@ def create_asa(algo_client, creator_privatekey, creator_address,unit_name,asset_
 unit_name = input("Enter the unit name of the ASA: ")
 asset_name = input("Enter the asset name of the ASA: ")
 total = int(input("Enter the total supply of the ASA: "))
+decimals = int(input("Enter the number of decimals for the ASA: "))
 url = input("Enter the URL of the ASA: ")
 note = input("Enter a note for the ASA: ").encode("utf-8")
 try:
@@ -58,6 +63,7 @@ try:
     creator_address=creator_address,
     unit_name=unit_name,
     asset_name=asset_name,
+    decimals=decimals,
     total=total,
     url=url,
     note=note,

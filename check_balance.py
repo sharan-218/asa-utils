@@ -3,14 +3,15 @@ from algosdk.encoding import is_valid_address
 from algosdk.util import microalgos_to_algos
 
 def get_balance(address,network) -> float:
+    ALGOD_ADDRESS = {
+        "testnet": "https://testnet-api.algonode.cloud",
+        "mainnet": "https://mainnet-api.algonode.cloud",
+    }.get(network)
     if not is_valid_address(address):
         print("Oops! Invalid Algorand address 😬")
         exit(1)
-    if network == "testnet":
-        ALGOD_ADDRESS = "https://testnet-api.algonode.cloud"
-    elif network == "mainnet":
-        ALGOD_ADDRESS = "https://mainnet-api.algonode.cloud"
-    else:
+        
+    if ALGOD_ADDRESS is None:
         print("Invalid network. Please enter 'mainnet' or 'testnet'❗")
         exit(1)
     algod_token =""
